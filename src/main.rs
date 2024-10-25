@@ -51,20 +51,25 @@ pub fn rlencode_chunk(cpos: &IVec2) -> String {
     for (index, spot) in BLOCK_SEQ.iter().enumerate() {
         let realspot = cpos_to_world(cpos) + spot;
         let blockat = unsafe { HASH.get(&realspot).unwrap_or(&0) };
-        if lastblock as u32 != *blockat || index == BLOCK_SEQ.len() - 1 {
+        if lastblock as u32 != *blockat  {
             //if its a new block, put the last run count and start a new run
             if count > 0 {
-                result += (count.to_string() + "\n").as_str();
+                result += (count.to_string() + "\n").as_str(); //put last count
             }
             lastblock = *blockat as i32;
             count = 1;
-            if index != BLOCK_SEQ.len() - 1 {
-                result += (blockat.to_string() + " ").as_str();
-            }
-        } else {
+            result += (blockat.to_string() + " ").as_str(); //put new block id
+
+        } 
+        else {
             //if its the same block continue the same run
             count += 1;
 
+        }
+
+        if index == BLOCK_SEQ.len() - 1 {
+            //we're at the end, put the count of whatever run we were counting
+            result += (count.to_string() + "\n").as_str();
         }
     }
 
