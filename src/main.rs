@@ -85,9 +85,10 @@ pub fn rldecode_chunk(data: String) {
 
         if let Some(count_str) = tokens.next() {
             let count = count_str.parse::<usize>().unwrap_or(0);
-            
-            for i in seq_index..(seq_index+count) {
-                unsafe { HASH.insert(BLOCK_SEQ[i], block) };
+            if block != 0 {
+                for i in seq_index..(seq_index+count) {
+                    unsafe { HASH.insert(BLOCK_SEQ[i], block) };
+                }
             }
             seq_index += count;
         }
